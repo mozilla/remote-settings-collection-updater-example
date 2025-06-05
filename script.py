@@ -3,7 +3,9 @@ import sys
 
 import kinto_http
 import requests
+import sentry_sdk
 from kinto_http.utils import collection_diff
+from sentry_sdk.integrations.gcp import GcpIntegration
 
 
 AUTHORIZATION = os.getenv("AUTHORIZATION", "")
@@ -12,6 +14,9 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "local").lower()
 if ENVIRONMENT not in {"local", "dev", "stage", "prod"}:
     raise ValueError(f"'ENVIRONMENT={ENVIRONMENT}' is not a valid value")
 IS_DRY_RUN = os.getenv("DRY_RUN", "0") in "1yY"
+SENTRY_DSN = os.getenv("SENTRY_DSN")
+SENTRY_ENV = os.getenv("SENTRY_ENV", ENVIRONMENT)
+
 
 COLLECTION_NAME = "product-integrity"
 
@@ -31,6 +36,12 @@ def get_source_records():
 
 
 def main():
+    if SENTRY_DSN:
+        # Initialize Sentry for error reporting.
+        sentry_sdk.init(SENTRY_DSN, integrations=[GcpIntegration()], environment=SENTRY_ENV)
+    else:
+        print("⚠️ Sentry is not configured. Set SENTRY_DSN environment variable to enable it.")
+
     client = kinto_http.Client(
         server_url=SERVER,
         auth=AUTHORIZATION,
