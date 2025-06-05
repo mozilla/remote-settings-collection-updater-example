@@ -8,6 +8,7 @@ Turn a source of data into records on Remote Settings.
 * Lint
 * Github Action CI
 * Tests with `kinto_http` mocks
+* Sentry integration
 
 ## Run
 
