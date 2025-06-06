@@ -1,4 +1,4 @@
-# Remote Settings Cronjob Example
+# Remote Settings Ingestion Cronjob Example
 
 Turn a source of data into records on Remote Settings.
 
