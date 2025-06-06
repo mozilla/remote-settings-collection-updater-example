@@ -30,9 +30,8 @@ $ curl -X PUT http://localhost:8888/v1/buckets/main-workspace/collections/produc
 And run the script:
 
 ```
-$ poetry install
-$ poetry shell
-$ SERVER="http://localhost:8888/v1" python script.py
+$ uv sync
+$ SERVER="http://localhost:8888/v1" uv run script.py
 
 Fetch server info...✅
 ⚠️ Anonymous

@@ -1,26 +1,31 @@
-VENV := $(shell echo $${VIRTUAL_ENV-.venv})
-INSTALL_STAMP := $(VENV)/.install.stamp
+INSTALL_STAMP := .venv/.install.stamp
+UV := $(shell command -v uv 2> /dev/null)
 
-$(INSTALL_STAMP): pyproject.toml poetry.lock
-	python -m venv $(VENV)
-	$(VENV)/bin/python -m pip install poetry
-	$(VENV)/bin/python -m poetry install --no-root
+help:
+	@echo "Please use 'make <target>' where <target> is one of the following commands.\n"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo "\nCheck the Makefile to know exactly what each target is doing."
+
+$(INSTALL_STAMP): pyproject.toml uv.lock  ## Install dependencies
+	@if [ -z $(UV) ]; then echo "uv could not be found. See https://docs.astral.sh/uv/"; exit 2; fi
+	$(UV) --version
+	$(UV) sync --locked
 	touch $(INSTALL_STAMP)
 
 .PHONY: format
-format: $(INSTALL_STAMP)
-	$(VENV)/bin/python -m poetry run ruff check --fix *.py
-	$(VENV)/bin/python -m poetry run ruff format *.py
+format: $(INSTALL_STAMP)  ## Format code base
+	$(UV) run ruff check --fix *.py
+	$(UV) run ruff format *.py
 
 .PHONY: lint
-lint: $(INSTALL_STAMP)
-	$(VENV)/bin/python -m poetry run ruff check *.py
-	$(VENV)/bin/python -m poetry run ruff format --check *.py
+lint: $(INSTALL_STAMP)  ## Analyze code base
+	$(UV) run ruff check *.py
+	$(UV) run ruff format --check *.py
 
 .PHONY: start
-start: $(INSTALL_STAMP)
-	$(VENV)/bin/python -m poetry run python script.py
+start: $(INSTALL_STAMP)  ## Start the script
+	$(UV) run python script.py
 
 .PHONY: test
-test: $(INSTALL_STAMP)
-	$(VENV)/bin/python -m poetry run py.test test.py
+test: $(INSTALL_STAMP)  ## Unit tests
+	$(UV) run py.test test.py
