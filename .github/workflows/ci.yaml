@@ -11,10 +11,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "uv"
       - name: Lint
         run: make lint
 
@@ -26,10 +22,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "uv"
       - name: Test
         run: make test
 
@@ -43,10 +35,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "uv"
       - name: Build ingestion job container
         run:
           docker build -t cronjob:test .
