@@ -32,7 +32,7 @@ And run the script:
 ```
 $ poetry install
 $ poetry shell
-$ AUTHORIZATION=testing:foobar SERVER="http://localhost:8888/v1" python script.py
+$ SERVER="http://localhost:8888/v1" python script.py
 
 Fetch server info...✅
 ⚠️ Anonymous
@@ -45,12 +45,34 @@ Apply changes...3 operations ✅
 Request review...✅
 ```
 
-### On the DEV server
+Or from the Docker container:
 
-* Login on the DEV Admin UI and copy the Bearer header value (UI top right bar)
+```
+$ docker build -t ingestion:latest .
+$ docker run -e ENVIRONMENT=local ingestion:latest
+...
+...
+Records are in sync. Nothing to do ✅.
+```
 
-And use it to run the script:
+### On Remote Settings official servers
+
+([List of environment servers](https://remote-settings.readthedocs.io/en/latest/getting-started.html#environments))
+
+**As yourself**:
+
+Login on the Admin UI and copy the Bearer header value (UI top right bar)
+
+And use it to run the script
 
 ```
 $ read -s BEARER
-$ AUTHORIZATION=$BEARER SERVER="http://remote-settings-dev.allizom.org/v1" python script.py
+$ AUTHORIZATION=$BEARER SERVER="http://remote-settings.mozilla.org/v1" python script.py
+```
+
+**Using an account**:
+
+```
+$ read -s PASSWD
+$ AUTHORIZATION=fxrelay-publisher:$PASSWD ENVIRONMENT=prod SERVER="http://remote-settings.mozilla.org/v1" python script.py
+```

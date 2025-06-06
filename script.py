@@ -9,10 +9,18 @@ from sentry_sdk.integrations.gcp import GcpIntegration
 
 
 AUTHORIZATION = os.getenv("AUTHORIZATION", "")
-SERVER = os.getenv("SERVER", "http://localhost:8888/v1")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "local").lower()
 if ENVIRONMENT not in {"local", "dev", "stage", "prod"}:
     raise ValueError(f"'ENVIRONMENT={ENVIRONMENT}' is not a valid value")
+SERVER = os.getenv(
+    "SERVER",
+    {
+        "local": "http://localhost:8888/v1",
+        "dev": "https://remote-settings-dev.allizom.org/v1",
+        "stage": "https://remote-settings.allizom.org/v1",
+        "prod": "https://remote-settings.mozilla.org/v1",
+    }[ENVIRONMENT],
+)
 IS_DRY_RUN = os.getenv("DRY_RUN", "0") in "1yY"
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 SENTRY_ENV = os.getenv("SENTRY_ENV", ENVIRONMENT)
