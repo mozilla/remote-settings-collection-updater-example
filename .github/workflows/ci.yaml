@@ -62,6 +62,6 @@ jobs:
       - name: Run job from container
         run: |
           # No need for AUTHORIZATION with the `testing.ini` config
-          docker -e SERVER=http://localhost:8888/v1 \
+          docker run -e SERVER=http://localhost:8888/v1 \
             --network=host \
-            runcronjob:test
+            cronjob:test
