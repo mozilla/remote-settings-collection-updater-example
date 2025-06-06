@@ -67,18 +67,25 @@ def test_outdated(mocked_client, mocked_get, capsys):
     mocked_client.get_records.return_value = [
         {"id": "release", "version": "1.0"},
         {"id": "beta", "version": "100.0b1"},
+        {"id": "aurora", "version": "42.0a1"},
     ]
     mocked_get.return_value.json.return_value = {
         "LATEST_FIREFOX_VERSION": "100.0",
         "FIREFOX_DEVEDITION": "100.0b1",
         "FIREFOX_ESR": "91.0",
     }
-    mocked_client.batch().__enter__().results.return_value = [
-        {"id": "release", "version": "100.0"}
+    # Get a handle on the context manager from ``client.batch()``:
+    batch_client = mocked_client.batch().__enter__()
+    batch_client.results.return_value = [
+        {"id": "release", "version": "100.0"},
+        {"id": "aurora", "deleted": True},
     ]
 
     main()
 
     mocked_client.get_records.assert_called_once()
     mocked_get.assert_called_once()
-    assert "1 operations ✅" in capsys.readouterr().out
+    assert "2 operations ✅" in capsys.readouterr().out
+    batch_client.delete_record.assert_called_once_with(id="aurora")
+    batch_client.create_record.assert_called_once_with(data={"id": "esr", "version": "91.0"})
+    mocked_client.request_review.assert_called_once_with(message="r?")
