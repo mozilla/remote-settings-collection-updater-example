@@ -50,18 +50,12 @@ jobs:
       - name: Create collection
         run: |
           curl -X PUT http://localhost:8888/v1/buckets/main-workspace/collections/product-integrity
-      - name: Run job from source
-        run: make start
 
-      - name: Reset content
-        run: |
-          curl -X POST http://localhost:8888/v1/__flush__
-      - name: Create collection
-        run: |
-          curl -X PUT http://localhost:8888/v1/buckets/main-workspace/collections/product-integrity
       - name: Run job from container
         run: |
-          # No need for AUTHORIZATION with the `testing.ini` config
           docker run -e SERVER=http://localhost:8888/v1 \
             --network=host \
             cronjob:test
+
+      - name: Run job from source
+        run: make start
