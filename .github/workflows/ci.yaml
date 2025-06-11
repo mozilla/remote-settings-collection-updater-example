@@ -50,7 +50,7 @@ jobs:
 
       - name: Run job from container
         run: |
-          docker run -e SERVER=http://localhost:8888/v1 \
+          docker run -e SERVER="${SERVER}" \
             --network=host \
             cronjob:test
 

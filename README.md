@@ -73,5 +73,5 @@ $ AUTHORIZATION=$BEARER SERVER="http://remote-settings.mozilla.org/v1" python sc
 
 ```
 $ read -s PASSWD
-$ AUTHORIZATION=fxrelay-publisher:$PASSWD ENVIRONMENT=prod SERVER="http://remote-settings.mozilla.org/v1" python script.py
+$ AUTHORIZATION=fxrelay-publisher:$PASSWD ENVIRONMENT=prod python script.py
 ```
