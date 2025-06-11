@@ -1,9 +1,11 @@
-name: Run CI checks
+name: Continous Integration
+description: Check lint, run unit tests, and integration tests
 
 on: pull_request
 
 jobs:
-  run_lint:
+  lint:
+    name: Check code style and consistency
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +21,8 @@ jobs:
       - name: Lint
         run: make lint
 
-  run_tests:
+  unit-tests:
+    name: Run unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +33,8 @@ jobs:
       - name: Test
         run: make test
 
-  test_load:
+  integration-tests:
+    name: Execute script against a real server
     runs-on: ubuntu-latest
     env:
       SERVER: "http://localhost:8888/v1"
