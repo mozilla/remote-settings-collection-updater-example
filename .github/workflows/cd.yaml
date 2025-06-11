@@ -1,5 +1,4 @@
 name: Continuous Deployment
-description: Publish container image on merge to `main` and `vX.Y.Z` tags.
 
 on:
   pull_request:

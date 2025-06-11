@@ -1,5 +1,4 @@
 name: Continous Integration
-description: Check lint, run unit tests, and integration tests
 
 on: pull_request
 
