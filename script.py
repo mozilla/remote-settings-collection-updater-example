@@ -103,7 +103,7 @@ def main():
 
     if ENVIRONMENT == "dev":
         # Self approve changes on DEV.
-        client.approve_changes(message="r+")
+        client.approve_changes()
     else:
         # Request review.
         print("Request review...", end="")
